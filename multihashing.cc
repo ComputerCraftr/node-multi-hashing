@@ -2,6 +2,7 @@
 #include <node_buffer.h>
 #include <v8.h>
 #include <stdint.h>
+#include <stdio.h>
 
 extern "C" {
     #include "bcrypt.h"
@@ -23,6 +24,12 @@ extern "C" {
     #include "x11.h"
     #include "x13.h"
     #include "x15.h"
+    #include "zr5.h"
+    #include "poly.h"
+    #include "x13bcd.h"
+    #include "lyra2.h"
+    #include "lyra2z.h"
+    #include "neoscrypt.h"
 }
 
 #include "boolberry.h"
@@ -117,13 +124,18 @@ using namespace v8;
  DECLARE_CALLBACK(x11, x11_hash, 32);
  DECLARE_CALLBACK(x13, x13_hash, 32);
  DECLARE_CALLBACK(x15, x15_hash, 32);
+ DECLARE_CALLBACK(zr5, zr5_hash, 32);
+ DECLARE_CALLBACK(poly, poly_hash, 32);
+ DECLARE_CALLBACK(x13bcd, x13bcd_hash, 32);
+ DECLARE_CALLBACK(lyra2z, lyra2z_hash, 32);
+ DECLARE_CALLBACK(neoscrypt, neoscrypt_hash, 32);
 
 
 DECLARE_FUNC(scrypt) {
    DECLARE_SCOPE;
 
    if (args.Length() < 3)
-       RETURN_EXCEPT("You must provide buffer to hash, N value, and R value");
+       RETURN_EXCEPT("You must provide buffer to hash, N value, and R value.");
 
    Local<Object> target = args[0]->ToObject();
 
@@ -164,7 +176,7 @@ DECLARE_FUNC(scryptn) {
    //unsigned int N = 1 << (getNfactor(input) + 1);
    unsigned int N = 1 << nFactor;
 
-   scrypt_N_R_1_256(input, output, N, 1, input_len); //hardcode for now to R=1 for now
+   scrypt_N_R_1_256(input, output, N, 1, input_len); //hardcode to R=1 for now
 
    SET_BUFFER_RETURN(output, 32);
 }
@@ -173,7 +185,7 @@ DECLARE_FUNC(scryptjane) {
     DECLARE_SCOPE;
 
     if (args.Length() < 5)
-        RETURN_EXCEPT("You must provide two argument: buffer, timestamp as number, and nChainStarTime as number, nMin, and nMax");
+        RETURN_EXCEPT("You must provide five arguments: buffer, timestamp as number, and nChainStarTime as number, nMin, and nMax.");
 
     Local<Object> target = args[0]->ToObject();
 
@@ -210,7 +222,7 @@ DECLARE_FUNC(cryptonight) {
         else if(args[1]->IsUint32())
             cn_variant = args[1]->Uint32Value();
         else
-            RETURN_EXCEPT("Argument 2 should be a boolean or uint32_t");
+            RETURN_EXCEPT("Argument 2 should be a boolean or uint32_t.");
     }
 
     Local<Object> target = args[0]->ToObject();
@@ -268,6 +280,44 @@ DECLARE_FUNC(boolberry) {
     SET_BUFFER_RETURN(output, 32);
 }
 
+DECLARE_FUNC(lyra2z) {
+   DECLARE_SCOPE;
+
+   if (args.Length() < 1)
+       RETURN_EXCEPT("You must provide one argument.");
+
+   Local<Object> target = args[0]->ToObject();
+
+   if(!Buffer::HasInstance(target))
+       RETURN_EXCEPT("Argument should be a buffer object.");
+
+   char * input = Buffer::Data(target);
+   char output[32];
+
+   lyra2z_hash(input, output);
+
+   SET_BUFFER_RETURN(output, 32);
+}
+
+DECLARE_FUNC(neoscrypt) {
+   DECLARE_SCOPE;
+
+   if (args.Length() < 1)
+       RETURN_EXCEPT("You must provide one argument.");
+
+   Local<Object> target = args[0]->ToObject();
+
+   if(!Buffer::HasInstance(target))
+       RETURN_EXCEPT("Argument should be a buffer object.");
+
+   char * input = Buffer::Data(target);
+   char output[32];
+
+   neoscrypt_hash(input, output, 0);
+
+   SET_BUFFER_RETURN(output, 32);
+}
+
 DECLARE_INIT(init) {
     NODE_SET_METHOD(exports, "bcrypt", bcrypt);
     NODE_SET_METHOD(exports, "blake", blake);
@@ -291,6 +341,11 @@ DECLARE_INIT(init) {
     NODE_SET_METHOD(exports, "x11", x11);
     NODE_SET_METHOD(exports, "x13", x13);
     NODE_SET_METHOD(exports, "x15", x15);
+    NODE_SET_METHOD(exports, "zr5", zr5);
+    NODE_SET_METHOD(exports, "poly", poly);
+    NODE_SET_METHOD(exports, "x13bcd", x13bcd);
+    NODE_SET_METHOD(exports, "lyra2z", lyra2z);
+    NODE_SET_METHOD(exports, "neoscrypt", neoscrypt);
 }
 
 NODE_MODULE(multihashing, init)
