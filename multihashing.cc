@@ -30,6 +30,10 @@ extern "C" {
     #include "lyra2.h"
     #include "lyra2z.h"
     #include "neoscrypt.h"
+    #include "equi.h"
+    #include "c11.h"
+    #include "x16r.h"
+    #include "x16s.h"
 }
 
 #include "boolberry.h"
@@ -127,8 +131,9 @@ using namespace v8;
  DECLARE_CALLBACK(zr5, zr5_hash, 32);
  DECLARE_CALLBACK(poly, poly_hash, 32);
  DECLARE_CALLBACK(x13bcd, x13bcd_hash, 32);
- DECLARE_CALLBACK(lyra2z, lyra2z_hash, 32);
- DECLARE_CALLBACK(neoscrypt, neoscrypt_hash, 32);
+ DECLARE_CALLBACK(c11, c11_hash, 32);
+ DECLARE_CALLBACK(x16r, x16r_hash, 32);
+ DECLARE_CALLBACK(x16s, x16s_hash, 32);
 
 
 DECLARE_FUNC(scrypt) {
@@ -318,6 +323,25 @@ DECLARE_FUNC(neoscrypt) {
    SET_BUFFER_RETURN(output, 32);
 }
 
+DECLARE_FUNC(equihash) {
+   DECLARE_SCOPE;
+
+    if (args.Length() < 2)
+        RETURN_EXCEPT("You must provide two arguments.");
+
+   Local<Object> header = args[0]->ToObject();
+   Local<Object> solution = args[1]->ToObject();
+
+   if(!Buffer::HasInstance(header) || !Buffer::HasInstance(solution))
+       RETURN_EXCEPT("Argument should be a buffer object.");
+
+   char * hdr = Buffer::Data(header);
+   char * sln = Buffer::Data(solution);
+
+   bool result = verifyEH(hdr, sln);
+   args.GetReturnValue().Set(result);
+}
+
 DECLARE_INIT(init) {
     NODE_SET_METHOD(exports, "bcrypt", bcrypt);
     NODE_SET_METHOD(exports, "blake", blake);
@@ -346,6 +370,8 @@ DECLARE_INIT(init) {
     NODE_SET_METHOD(exports, "x13bcd", x13bcd);
     NODE_SET_METHOD(exports, "lyra2z", lyra2z);
     NODE_SET_METHOD(exports, "neoscrypt", neoscrypt);
+    NODE_SET_METHOD(exports, "equihash", equihash);
+    NODE_SET_METHOD(exports, "c11", c11);
 }
 
 NODE_MODULE(multihashing, init)

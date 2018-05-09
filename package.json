@@ -31,6 +31,10 @@
         "poly",
         "x13bcd",
         "lyra2z",
-        "neoscrypt"
+        "neoscrypt",
+        "equihash",
+        "c11",
+        "x16r",
+        "x16s"
     ]
 }
