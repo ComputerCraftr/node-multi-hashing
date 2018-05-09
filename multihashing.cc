@@ -27,7 +27,8 @@ extern "C" {
     #include "zr5.h"
     #include "poly.h"
     #include "x13bcd.h"
-    #include "lyra2.h"
+    #include "lyra2re.h"
+    #include "lyra2v2.h"
     #include "lyra2z.h"
     #include "neoscrypt.h"
     #include "equi.h"
@@ -131,6 +132,9 @@ using namespace v8;
  DECLARE_CALLBACK(zr5, zr5_hash, 32);
  DECLARE_CALLBACK(poly, poly_hash, 32);
  DECLARE_CALLBACK(x13bcd, x13bcd_hash, 32);
+ DECLARE_CALLBACK(lyra2re, lyra2re_hash, 32);
+ DECLARE_CALLBACK(lyra2v2, lyra2v2_hash, 32);
+ DECLARE_CALLBACK(lyra2z, lyra2z_hash, 32);
  DECLARE_CALLBACK(c11, c11_hash, 32);
  DECLARE_CALLBACK(x16r, x16r_hash, 32);
  DECLARE_CALLBACK(x16s, x16s_hash, 32);
@@ -285,25 +289,6 @@ DECLARE_FUNC(boolberry) {
     SET_BUFFER_RETURN(output, 32);
 }
 
-DECLARE_FUNC(lyra2z) {
-   DECLARE_SCOPE;
-
-   if (args.Length() < 1)
-       RETURN_EXCEPT("You must provide one argument.");
-
-   Local<Object> target = args[0]->ToObject();
-
-   if(!Buffer::HasInstance(target))
-       RETURN_EXCEPT("Argument should be a buffer object.");
-
-   char * input = Buffer::Data(target);
-   char output[32];
-
-   lyra2z_hash(input, output);
-
-   SET_BUFFER_RETURN(output, 32);
-}
-
 DECLARE_FUNC(neoscrypt) {
    DECLARE_SCOPE;
 
@@ -368,6 +353,8 @@ DECLARE_INIT(init) {
     NODE_SET_METHOD(exports, "zr5", zr5);
     NODE_SET_METHOD(exports, "poly", poly);
     NODE_SET_METHOD(exports, "x13bcd", x13bcd);
+    NODE_SET_METHOD(exports, "lyra2re", lyra2z);
+    NODE_SET_METHOD(exports, "lyra2v2", lyra2z);
     NODE_SET_METHOD(exports, "lyra2z", lyra2z);
     NODE_SET_METHOD(exports, "neoscrypt", neoscrypt);
     NODE_SET_METHOD(exports, "equihash", equihash);
