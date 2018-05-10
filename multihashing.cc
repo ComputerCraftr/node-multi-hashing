@@ -35,6 +35,11 @@ extern "C" {
     #include "c11.h"
     #include "x16r.h"
     #include "x16s.h"
+    #include "argon2a.h"
+    #include "phi.h"
+    #include "skunk.h"
+    #include "tribus.h"
+    #include "xevan.h"
 }
 
 #include "boolberry.h"
@@ -138,6 +143,11 @@ using namespace v8;
  DECLARE_CALLBACK(c11, c11_hash, 32);
  DECLARE_CALLBACK(x16r, x16r_hash, 32);
  DECLARE_CALLBACK(x16s, x16s_hash, 32);
+ DECLARE_CALLBACK(argon2, argon2_hash, 32);
+ DECLARE_CALLBACK(phi, phi_hash, 32);
+ DECLARE_CALLBACK(skunk, skunk_hash, 32);
+ DECLARE_CALLBACK(tribus, tribus_hash, 32);
+ DECLARE_CALLBACK(xevan, xevan_hash, 32);
 
 
 DECLARE_FUNC(scrypt) {
@@ -359,6 +369,13 @@ DECLARE_INIT(init) {
     NODE_SET_METHOD(exports, "neoscrypt", neoscrypt);
     NODE_SET_METHOD(exports, "equihash", equihash);
     NODE_SET_METHOD(exports, "c11", c11);
+    NODE_SET_METHOD(exports, "x16r", x16r);
+    NODE_SET_METHOD(exports, "x16s", x16s);
+    NODE_SET_METHOD(exports, "argon2", argon2);
+    NODE_SET_METHOD(exports, "phi", phi);
+    NODE_SET_METHOD(exports, "skunk", skunk);
+    NODE_SET_METHOD(exports, "tribus", tribus);
+    NODE_SET_METHOD(exports, "xevan", xevan);
 }
 
 NODE_MODULE(multihashing, init)

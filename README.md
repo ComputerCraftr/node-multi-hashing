@@ -14,8 +14,13 @@ node-multi-hashing
 Cryptocurrency hashing functions for node.js.
 
 
-Algorithms
+Algorithms (some need testing)
 ----------
+* xevan
+* tribus
+* skunk
+* phi
+* argon2
 * x16s
 * x16r
 * c11
@@ -60,7 +65,7 @@ So far this native Node.js addon can do the following hashing algos
 ```javascript
 var multiHashing = require('multi-hashing');
 
-var algorithms = ['quark', 'x11', 'scrypt', 'scryptn', 'scryptjane', 'keccak', 'bcrypt', 'skein', 'blake', 'zr5', 'poly', 'x13bcd', 'lyra2re','lyra2v2','lyra2z', 'neoscrypt', 'equihash', 'c11', 'x16r', 'x16s'];
+var algorithms = ['quark', 'x11', 'scrypt', 'scryptn', 'scryptjane', 'keccak', 'bcrypt', 'skein', 'blake', 'zr5', 'poly', 'x13bcd', 'lyra2re','lyra2v2','lyra2z', 'neoscrypt', 'equihash', 'c11', 'x16r', 'x16s', 'argon2', 'phi', 'skunk', 'tribus', 'xevan'];
 
 var data = new Buffer("7000000001e980924e4e1109230383e66d62945ff8e749903bea4336755c00000000000051928aff1b4d72416173a8c3948159a09a73ac3bb556aa6bfbcad1a85da7f4c1d13350531e24031b939b9e2b", "hex");
 

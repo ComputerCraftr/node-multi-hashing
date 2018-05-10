@@ -37,6 +37,11 @@
         "equihash",
         "c11",
         "x16r",
-        "x16s"
+        "x16s",
+        "argon2",
+        "phi",
+        "skunk",
+        "tribus",
+        "xevan"
     ]
 }
