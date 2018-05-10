@@ -24,7 +24,7 @@
 
 void xevan_hash(const char* input, char* output, uint32_t len)
 {
-	uint32_t _ALIGN(64) hash[32]; // 128 bytes required
+	uint32_t hash[32]; // 128 bytes required
 	const int dataLen = 128;
 
 	sph_blake512_context     ctx_blake;

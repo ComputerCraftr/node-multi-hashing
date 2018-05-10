@@ -9,7 +9,7 @@
 
 void tribus_hash(const char* input, char* output, uint32_t len)
 {
-	uint8_t _ALIGN(64) hash[64];
+	uint8_t hash[64];
 
 	sph_jh512_context ctx_jh;
 	sph_keccak512_context ctx_keccak;

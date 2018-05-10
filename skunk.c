@@ -10,7 +10,7 @@
 
 void skunk_hash(const char *input, char* output, uint32_t len)
 {
-	uint32_t _ALIGN(64) hash[16];
+	uint32_t hash[16];
 
 	sph_skein512_context ctx_skein;
 	sph_cubehash512_context ctx_cube;

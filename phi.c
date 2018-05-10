@@ -19,7 +19,7 @@ void phi_hash(const char* input, char* output, uint32_t len)
 	sph_gost512_context         ctx_gost;
 	sph_echo512_context         ctx_echo;
 
-	uint8_t _ALIGN(128) hash[64];
+	uint8_t hash[64];
 
 	sph_skein512_init(&ctx_skein);
 	sph_skein512(&ctx_skein, input, len);
