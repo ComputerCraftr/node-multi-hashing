@@ -1,6 +1,7 @@
 #ifndef C11_H
 #define C11_H
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,4 +14,4 @@ void c11_hash(const char* input, char* output, uint32_t len);
 }
 #endif
 
-#endif
+#endif // C11_H
